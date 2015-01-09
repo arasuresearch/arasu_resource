@@ -86,6 +86,7 @@ class Store {
       }
     }).catchError(Logger.root.shout);
   }
+
   dynamic find(var Id) {
     var obj = _caches.firstWhere((e) => e.attrs["Id"] == Id, orElse: () => null);
     if (obj != null) {
@@ -101,21 +102,21 @@ class Store {
         obj.updateClone();
       } else {
         Logger.root.info("No Data load from store for $Id");
-        //        throw("empty set");
-        http.get('$path/${Id}').then((HttpResponse response) {
-          List data = response.data;
-          if (data[1] == null) {
-            Map map = data[0] as Map;
-            if (map != null && map.isNotEmpty) {
-              _caches.add(obj);
-              syncData(obj, map);
-            } else {
-              Logger.root.info("No Data fetched from server for $Id");
-            }
-          } else {
-            raiseIfNeeded(data[1]);
-          }
-        }).catchError((e) => Logger.root.shout);
+        throw("empty set");
+        // http.get('$path/${Id}').then((HttpResponse response) {
+        //   List data = response.data;
+        //   if (data[1] == null) {
+        //     Map map = data[0] as Map;
+        //     if (map != null && map.isNotEmpty) {
+        //       _caches.add(obj);
+        //       syncData(obj, map);
+        //     } else {
+        //       Logger.root.info("No Data fetched from server for $Id");
+        //     }
+        //   } else {
+        //     raiseIfNeeded(data[1]);
+        //   }
+        // }).catchError((e) => Logger.root.shout);
 
 
       }
@@ -146,6 +147,25 @@ class Store {
       Logger.root.shout("Server Response Error :$error ");
     }
 
+  }
+  void UpToDate(var obj) {
+    
+    http.get('$path/${obj.Id}?UpdatedAt=${obj.UpdatedAt}').then((HttpResponse response) {
+      List data = response.data;
+      if (data[1] == null) {
+        Map map = data[0] as Map;
+        if (map != null && map.isNotEmpty) {
+          if (obj == null) {
+            _caches.add(obj);
+          }
+          syncData(obj, map);
+        } else {
+          Logger.root.info("No Data Received");
+        }
+      } else {
+        raiseIfNeeded(data[1]);
+      }
+    }).catchError(Logger.root.shout);
   }
 
   dynamic findThroughFetch(var Id) {

@@ -25,7 +25,13 @@ class Util {
             case 'int':
               value = int.parse(value, onError: (_) => 0);
               break;
+            case 'Int':
+              value = int.parse(value, onError: (_) => 0);
+              break;
             case 'bool':
+              value = ['1', 'true', true, 1].contains(value);
+              break;
+            case 'Bool':
               value = ['1', 'true', true, 1].contains(value);
               break;
             case 'DateTime':
