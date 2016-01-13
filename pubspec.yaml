@@ -4,6 +4,6 @@ author: Thaniyarasu Kannusamy <thaniyarasu@gmail.com>
 description: Arasu package to manage arasu apps
 homepage: http://arasuframework.org
 dependencies:
-  angular: any
+  angular2: any
   logging: any
-  unittest: any
+  test: any
